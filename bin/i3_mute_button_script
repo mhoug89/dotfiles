@@ -1,0 +1,15 @@
+#!/bin/bash
+
+CURRENT_STATE=`amixer get Master | egrep 'Playback.*?\[o' | egrep -o '\[o.+\]'`
+
+if [[ $CURRENT_STATE == '[on]' ]]; then
+    amixer -q set Speaker mute
+    amixer -q set Master mute
+    amixer -q set Headphone mute
+    amixer -q set PCM mute
+else
+    amixer -q set Speaker unmute
+    amixer -q set Master unmute
+    amixer -q set Headphone unmute
+    amixer -q set PCM unmute
+fi

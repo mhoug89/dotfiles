@@ -1,0 +1,21 @@
+#!/bin/bash
+# This script is useful when you want to change parameters given to
+# the screen locker (time before locking, etc).  It kills the processes
+# and then restarts them with the given parameters
+#
+# $1 - the time in minutes of inactivity before the screen is locked
+
+### Kill lots of things
+# Kill gnome-screensaver
+killme=$(ps ux | grep -E 'gnome-screensaver$' | awk '{print $2}')
+if [[ $killme != "" ]] ; then
+  kill $killme
+fi
+
+# Kill xautolock
+killall xautolock
+
+### Start lots of things
+# launch as daemon
+nohup gnome-screensaver 0<&- &>/dev/null &
+xautolock -time $1 -locker "gnome-screensaver-command -l"

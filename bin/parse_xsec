@@ -1,0 +1,11 @@
+#!/bin/sh
+
+BASE=$1
+shift
+
+while [ $# -gt 0 ]
+do
+  secs=$(echo "scale=6; $1/$BASE" | bc)
+  date -d @$secs +"%F %T.%N %z"
+  shift
+done

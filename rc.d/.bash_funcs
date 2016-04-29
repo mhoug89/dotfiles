@@ -1,0 +1,31 @@
+function rdp_with_flags() {
+  if [[ "$#" != 2 ]] ; then
+    echo "Please supply two arguments: host [domain\\\\]user"
+    return 0
+  fi
+  monitor_1_dimen=$(xrandr | head -n 5 | \grep -o -P \
+                    "primary \d{3,4}x\d{3,4}" | cut -d' ' -f2)
+
+  if [ -z $monitor_1_dimen ]; then
+    monitor_1_dimen="800x600"
+  else
+    # To show the top of the guest screen while also keeping the host box's
+    # window toolbar in view, I just estimate that the host toolbar takes
+    # up a bit less than 5% of the screen, making rdesktop use 95% height.
+    width=$(echo $monitor_1_dimen | cut -dx -f1 )
+    # width=$(echo "$width * .95" | bc -q | awk '{printf("%d\n",$1 + 0.5)}')
+    height=$(echo $monitor_1_dimen | cut -dx -f2)
+    height=$(echo "$height * .95" | bc -q | awk '{printf("%d\n",$1 + 0.5)}')
+    monitor_1_dimen=${width}x${height}
+  fi
+  echo "Using window dimensions: $monitor_1_dimen"
+  rdesktop $1 -z -g $monitor_1_dimen -P -D -a 32 -u $2
+}
+
+update-repo() {
+  for source in "$@"; do
+    sudo apt-get update -o Dir::Etc::sourcelist="sources.list.d/${source}" \
+    -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
+  done
+}
+
