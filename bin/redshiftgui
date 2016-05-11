@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -f "$HOME/.redshiftgrc" ]; then
+  sed -i '' s/|/,/g "$HOME/.redshiftgrc"
+fi
+
+if [ -f "/usr/bin/redshiftgui" ]; then
+  /usr/bin/redshiftgui
+fi
