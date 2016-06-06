@@ -1,4 +1,23 @@
-function rdp_with_flags() {
+parse_git_branch() {
+  git branch 2> /dev/null | \
+    sed -e '/^[^*]/d' -e 's/\*\s\+\(.*\)/\1/' 2> /dev/null
+}
+
+# For use with PS1 variable, echoes "(my-branch) "
+parse_and_truncate_git_branch() {
+  local branch_str="$(parse_git_branch)"
+  if [[ -z "$branch_str" ]]; then
+    return
+  fi
+  # Truncate and add ellipses if the string is too long.
+  if (( ${#branch_str} >= 16 )); then
+    branch_str="${branch_str:0:13}..."
+  fi
+  # Echo with a trailing space.
+  echo "($branch_str) "
+}
+
+rdp_with_flags() {
   if [[ "$#" != 2 ]] ; then
     echo "Please supply two arguments: host [domain\\\\]user"
     return 0

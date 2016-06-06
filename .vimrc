@@ -14,8 +14,17 @@ colo wombat256mod
 """"""""""""""""""
 " End color scheme stuff ******************************************************
 
-" Extra status bar magic via Reid
-set statusline=\ %n\ %{&ff}%y\ \ \ %<%F%m\ \ \ \ \ Line:\ %l/%L:%c\ \ \ 0x%04B
+" A useful statusline
+set statusline=%{fugitive#statusline()}  " Git status line from Fugitive
+set statusline+=\ %n  " Buffer number
+set statusline+=\ %{&ff}%y  " FileFormat[FileType]
+set statusline+=\ \|
+set statusline+=\ %<%F%m  " TruncatedFilePath[ModifiedFlag]
+set statusline+=\ \|
+set statusline+=\ Line:\ %l/%L:%c  " CurLineNumber/TotalLines:CurColumn
+set statusline+=\ \|
+set statusline+=\ 0x%04B  " Unicode value of character under the cursor.
+
 set laststatus=2
 
 set showtabline=3   " Show tabs at the top, even if only one is open
@@ -53,8 +62,9 @@ set incsearch       " Have vim search as you type
 set scrolloff=6
 " Searches will be case insentitive if the search is all lowercase characters
 "  and case sensitive otherwise.
-"set ignorecase
-"set smartcase
+set smartcase
+" Searches will always be case insensitive
+"set ignorecase  " set [no]ic
 
 " End search stuff ************************************************************
 

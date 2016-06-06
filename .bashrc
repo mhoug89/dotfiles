@@ -56,7 +56,20 @@ fi
 
 #if [ "$color_prompt" = yes ]; then
 
-PS1='\[\e[1;31;40m\]\u\[\e[1;37;40m\]@\[\e[1;32;40m\]\h \[\e[1;33;40m\]\W\[\e[1;36;40m\] $\[\e[0m\] '
+# \e is ASCII escape character (same as \033).
+# \[ and \] begin/end a sequence of non-printed characters.
+# 1 is bold, 40 is light-black background
+C_RED_BOLD='\[\e[1;31;40m\]'
+C_GREEN_BOLD='\[\e[1;32;40m\]'
+C_YELLOW_BOLD='\[\e[1;33;40m\]'
+C_LIGHT_BLUE_BOLD='\[\e[1;36;40m\]'
+C_WHITE='\[\e[37;40m\]'
+C_WHITE_BOLD='\[\e[1;37;40m\]'
+C_END='\[\e[0m\]'
+PS1="${C_WHITE}\! ${C_RED_BOLD}\u${C_WHITE_BOLD}@${C_GREEN_BOLD}\h "
+PS1+="${C_YELLOW_BOLD}\W${C_LIGHT_BLUE_BOLD} "
+PS1+="\$(parse_and_truncate_git_branch)\$${C_END} "
+
 #else
 #    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 #fi
