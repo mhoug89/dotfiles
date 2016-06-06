@@ -3,6 +3,7 @@
 ```sh
 $ git clone <path-to-repo>/dotfiles.git
 $ cd dotfiles
+$ git submodules update --init --recursive
 $ ./setup.sh
 $ source ~/.profile
 ```
