@@ -5,7 +5,7 @@ if [[ "$diffTool" == "" ]]; then
   diffTool="$(which diff)"
 fi
 
-for item in $(find -name ".*" -type f); do
+for item in $(find -name ".*" -type f | grep -v ".git"); do
   curDiff="$("$diffTool" -q "$item" "$HOME/$item")"
   if [[ -n $curDiff ]]; then
     echo "[REPO] \"$item\" diff'd with [CURRENT_HOME] \"~/$item\""

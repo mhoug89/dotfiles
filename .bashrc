@@ -5,21 +5,20 @@
 # For letting me know when a file doesn't exist, etc.
 PRINT_WARNINGS=0
 
-# If not running interactively, don't do anything
+# If not running interactively, don't do anything.
 [ -z "$PS1" ] && return
 
-export HISTCONTROL=ignorespace  # Ignore just whitespace.
-#export HISTCONTROL=ignoredups  # Ignore duplicate entries.
-
-# make vim the default editor
+# Make vim the default editor!
 export EDITOR=vim
 
-# append to the history file, don't overwrite it
+# Append to the history file, don't overwrite it.
 shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-export HISTSIZE=200000
-export HISTFILESIZE=200000
+# unsetting hist{file}size means unlimited history.
+export HISTSIZE=
+export HISTFILESIZE=
+export HISTCONTROL=ignorespace  # Ignore just whitespace.
+#export HISTCONTROL=ignoredups  # Ignore duplicate entries.
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
