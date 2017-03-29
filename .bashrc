@@ -75,6 +75,21 @@ PS1+="\$(parse_and_truncate_git_branch)\$${C_END} "
 #fi
 #unset color_prompt force_color_prompt
 
+# If python virtualenvwrapper is installed, make sure we perform all its
+# necessary setup steps. This allows easily working with python virtualenvs:
+# $ mkvirtualenv my_env
+# $ workon my_env
+# $ deactivate
+# $ rmvirtualenv my_env
+if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+  export WORKON_HOME="$HOME/.virtualenvs"
+  if [ ! -d "$HOME/venv_projects" ]; then
+    mkdir "$HOME/venv_projects"
+  fi
+  export PROJECT_HOME="$HOME/venv_projects"
+  source /usr/local/bin/virtualenvwrapper.sh
+fi
+
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
   xtermpetdp121|rxvt*)
