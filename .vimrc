@@ -99,6 +99,13 @@ let delimitMate_expand_cr = 1
 " YouCompleteMe debugging options
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
+" For Syntastic plugin
+"  Option 1: Disable on write; requires you to explicitly check the style.
+"    Good for when checking takes multiple seconds (for large files), which
+"    can be pretty annoying.
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes':   [],'passive_filetypes': [] }
+"  Option 2: Disable by default on write+quit (check-on-write is still done).
+"let g:syntastic_check_on_wq = 0
 " End plugin-specific section ***********************************************
 
 " Enable mouse

@@ -114,9 +114,9 @@ Files2Source=(
 # Counter-based for loop (this method accounts for spaces in file names)
 sourceLen=${#Files2Source[@]}
 for (( i=0; i<${sourceLen}; i++ )); do
-  if [ -f ${Files2Source[$i]} ]; then
-    . ${Files2Source[$i]}
-  elif [ -d ${Files2Source[$i]} ]; then
+  if [ -f "${Files2Source[$i]}" ]; then
+    . "${Files2Source[$i]}"
+  elif [ -d "${Files2Source[$i]}" ]; then
     shopt -s dotglob
     for script in "${Files2Source[$i]}"/* ; do
       . "$script"
