@@ -1,3 +1,9 @@
+cat_md() {
+  command -v pandoc >/dev/null 2>&1 || { echo "pandoc not in PATH" >&2; return; }
+  command -v lynx >/dev/null 2>&1 || { echo "lynx not in PATH" >&2; return; }
+  pandoc $1 | lynx -stdin
+}
+
 parse_git_branch() {
   git branch 2> /dev/null | \
     sed -e '/^[^*]/d' -e 's/[*] \(.*\)/\1/' 2> /dev/null
@@ -47,4 +53,3 @@ update-repo() {
     -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
   done
 }
-
