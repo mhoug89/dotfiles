@@ -1,0 +1,4 @@
+startup_message off
+defscrollback 300000
+termcapinfo xterm* ti@:te@
+defbce "on"
