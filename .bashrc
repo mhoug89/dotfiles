@@ -5,6 +5,14 @@
 # For letting me know when a file doesn't exist, etc.
 PRINT_WARNINGS=0
 
+# Arg to this function should be an ABSOLUTE path to the desired dir.
+append_dir_to_path_if_not_in_path() {
+  # Also check if it's a valid directory first.
+  if [ -d "$1" ]; then
+    [[ ":$PATH:" != *":$1:"* ]] && PATH="${PATH}:$1"
+  fi
+}
+
 # If not running interactively, don't do anything.
 [ -z "$PS1" ] && return
 
@@ -83,36 +91,48 @@ case "$TERM" in
     ;;
 esac
 
-if [ -d "$HOME/bin" ]; then
-  # This is intentionally appended, not prepended, to enforce that things in my
-  # bin directory should not have names used by system tools (or other things
-  # already findable via my PATH).
-  PATH="$PATH:$HOME/bin"
-fi
-
-# Create an array of files that should be sourced.
-# Can also add directories such that every file in the directory is sourced.
-Files2Source=(
-  "/etc/bash_completion"
-  "$HOME/rc.d"
-  # Should source all files in rc.work.d, as well as other necessary stuff.
-  "${HOME}/.bashrc_work"
-)
-
+# Add various local bin directories to PATH.
 # Counter-based for loop (this method accounts for spaces in file names)
-sourceLen=${#Files2Source[@]}
-for (( i=0; i<${sourceLen}; i++ )); do
-  if [ -f "${Files2Source[$i]}" ]; then
-    . "${Files2Source[$i]}"
-  elif [ -d "${Files2Source[$i]}" ]; then
-    shopt -s dotglob
-    for script in "${Files2Source[$i]}"/* ; do
-      . "$script"
-    done
-    shopt -u dotglob
-  elif (( $PRINT_WARNINGS )); then
-    # Alert me when a file doesn't exist.
-    # BASH_SOURCE shows this script's filename.
-    echo "${BASH_SOURCE}: Supposed to source ${Files2Source[$i]}, file didn't exist."
-  fi
-done
+wrapped_func_to_not_change_counter() {
+  dirs_to_add_to_path=(
+    "$HOME/bin"
+    # Some tools install things here, e.g. `pip install --user <package>`.
+    "$HOME/.local/bin"
+  )
+  arr_len=${#dirs_to_add_to_path[@]}
+  local i
+  for (( i=0; i<${arr_len}; i++ )); do
+    append_dir_to_path_if_not_in_path "${dirs_to_add_to_path[$i]}"
+  done
+}
+wrapped_func_to_not_change_counter
+
+wrapped_func_to_not_change_counter() {
+  # Create an array of files that should be sourced.
+  # Can also add directories such that every file in the directory is sourced.
+  files_to_source=(
+    "/etc/bash_completion"
+    "$HOME/rc.d"
+    # Should source all files in rc.work.d, as well as other necessary stuff.
+    "${HOME}/.bashrc_work"
+  )
+  arr_len=${#files_to_source[@]}
+
+  local i
+  for (( i=0; i<${arr_len}; i++ )); do
+    if [ -f "${files_to_source[$i]}" ]; then
+      . "${files_to_source[$i]}"
+    elif [ -d "${files_to_source[$i]}" ]; then
+      shopt -s dotglob
+      for script in "${files_to_source[$i]}"/* ; do
+        . "$script"
+      done
+      shopt -u dotglob
+    elif (( $PRINT_WARNINGS )); then
+      # Alert me when a file doesn't exist.
+      # BASH_SOURCE shows this script's filename.
+      echo "${BASH_SOURCE}: Supposed to source ${files_to_source[$i]}, file didn't exist."
+    fi
+  done
+}
+wrapped_func_to_not_change_counter
