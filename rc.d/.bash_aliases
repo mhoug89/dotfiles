@@ -8,6 +8,14 @@ alias egrep='\egrep ${LS_COLOR_FLAG}'
 # grep with context
 alias cgrep='\grep ${LS_COLOR_FLAG} -C 2'
 
+if [ -d "/cygdrive/c/Users/$USER/Desktop" ] ; then
+  alias desktop="cd /cygdrive/c/Users/$USER/Desktop"
+fi
+
+# These are about the only `date` formats I use.
+alias date_day='date +%Y%m%d'
+alias date_sec='date +%Y%m%d%H%M%S'
+
 # ls variants.
 # Enable color support of ls and also add handy aliases.
 if [ -x /usr/bin/dircolors ] ; then
@@ -29,15 +37,4 @@ if [ -n "$(which parse_xsec)" ]; then
   alias parse_sec='parse_xsec 1'
   alias parse_msec='parse_xsec 1000'
   alias parse_usec='parse_xsec 1000000'
-fi
-
-# Conditional aliases, depending on what box I'm on.
-if [[ $(hostname -f) == *.cs.mtsu.edu ]] ; then
-  # shortcut for firefox fix
-  alias fffix='rm -i ~/.mozilla/firefox/petdp121/.parentlock ~/.mozilla/firefox/petdp121 g/lock;rm ~/.mozilla/firefox/petdp121.default/places.sqlite-journal;cp ~/.mozilla/firefox/petdp121.default/places.sqlite ~/.mozilla/firefox/petdp121.default/places.sqlite-journal; rm ~/.mozilla/firefox/petdp121.default/places.sqlite;rm ~/.mozilla/firefox/petdp121.default/.parentlock'
-  alias BUTLER='cd ~rbutler/public/courses/'
-fi
-
-if [ -d "/cygdrive/c/Users/$USER/Desktop" ] ; then
-  alias desktop="cd /cygdrive/c/Users/$USER/Desktop"
 fi
