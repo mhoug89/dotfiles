@@ -19,14 +19,14 @@ append_dir_to_path_if_not_in_path() {
 # Make vim the default editor!
 export EDITOR=vim
 
-# Append to the history file, don't overwrite it.
-shopt -s histappend
-
 # unsetting hist{file}size means unlimited history.
 export HISTSIZE=
 export HISTFILESIZE=
 export HISTCONTROL=ignorespace  # Ignore just whitespace.
 #export HISTCONTROL=ignoredups  # Ignore duplicate entries.
+# Append to the history file, don't overwrite it.
+shopt -s histappend
+
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -76,6 +76,11 @@ C_END='\[\e[0m\]'
 PS1="${C_WHITE}\! ${C_RED_BOLD}\u${C_WHITE_BOLD}@${C_GREEN_BOLD}\h "
 PS1+="${C_YELLOW_BOLD}\W${C_LIGHT_BLUE_BOLD} "
 PS1+="\$(parse_and_truncate_git_branch)\$${C_END} "
+# Prepend newline to PS1 var. For commands that output content that
+# does not have a trailing newline, we'd usually see our prompt get
+# tacked on to the end of the output. To avoid this, we always add
+# an extra newline before printing our prompt.
+PS1="\n$PS1"
 
 #else
 #    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
