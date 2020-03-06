@@ -4,6 +4,85 @@ cat_md() {
   pandoc $1 | lynx -stdin
 }
 
+### CHFs (Commone Helper Functions):
+
+# Returns numeric values to be used within conditional checks, e.g.:
+#   $ if cmn_check_dir_exists /some/dir; then do_stuff(); fi
+#   $ if ! cmn_check_dir_exists /some/garbage/path; then do_stuff(); fi
+chf_check_dir_exists() {
+  local fpath="${1}"
+  [[ -d "${fpath}" ]]
+  return $?
+}
+
+# Returns numeric values to be used within conditional checks, e.g.:
+#   $ if cmn_check_file_exists /some/file; then do_stuff(); fi
+#   $ if ! cmn_check_file_exists /some/garbage/path; then do_stuff(); fi
+chf_check_file_exists() {
+  local fpath="${1}"
+  [[ -f "${fpath}" ]]
+  return $?
+}
+
+chf_echo_green() {
+  local green=$(tput setaf 2)
+  local reset=$(tput sgr0)
+  echo -e "${green}$@${reset}"
+}
+
+chf_echo_red() {
+  local red=$(tput setaf 1)
+  local reset=$(tput sgr0)
+  echo -e "${red}$@${reset}"
+}
+
+chf_echo_yellow() {
+  local yellow=$(tput setaf 3)
+  local reset=$(tput sgr0)
+  echo -e "${yellow}$@${reset}"
+}
+
+# Replaces given string 'search' with 'replace' in given files.
+#
+# Important: The replacement is done in-place. Thus, it overwrites the given
+# files, and no backup files are created.
+#
+# Note that this function is intended to be used to replace fixed strings; i.e.,
+# it does not interpret regular expressions. It was written to replace simple
+# placeholders in sample configuration files (you could say very poor man's
+# templating engine).
+#
+# This functions expects given string 'search' to be found in all the files;
+# thus, it expects to replace that string in all files. If a given file misses
+# that string, a warning is issued by calling `cmn_echo_warn`. Furthermore,
+# if a given file does not exist, a warning is issued as well.
+#
+# To replace the string, perl is used. Pattern metacharacters are quoted
+# (disabled). The search is a global one; thus, all matches are replaced, and
+# not just the first one.
+#
+# Example:
+#   $ chf_replace_in_files placeholder replacement file1.txt file2.txt
+chf_replace_in_files() {
+  local search=${1}
+  local replace=${2}
+  local files=${@:3}
+
+  for curfile in ${files[@]}; do
+    if [[ -e "${curfile}" ]]; then
+      if ( grep --fixed-strings --quiet "${search}" "${curfile}" ); then
+        perl -pi -e "s/\Q${search}/${replace}/g" "${curfile}"
+      else
+        chf_echo_yellow "Could not find search string '${search}' (thus," \
+                        "cannot replace with '${replace}') in file: ${curfile}"
+      fi
+    else
+        chf_echo_yellow "File '${curfile}' does not exist (thus, cannot" \
+                        "replace '${search}' with '${replace}')."
+    fi
+  done
+}
+
 parse_git_branch() {
   git branch 2> /dev/null | \
     sed -e '/^[^*]/d' -e 's/[*] \(.*\)/\1/' 2> /dev/null
