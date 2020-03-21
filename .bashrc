@@ -117,6 +117,7 @@ wrapped_func_to_not_change_counter() {
   # Can also add directories such that every file in the directory is sourced.
   files_to_source=(
     "/etc/bash_completion"
+    "$HOME/.bashrc_local"
     "$HOME/rc.d"
     # Should source all files in rc.work.d, as well as other necessary stuff.
     "${HOME}/.bashrc_work"
