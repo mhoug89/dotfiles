@@ -4,7 +4,7 @@ cat_md() {
   pandoc $1 | lynx -stdin
 }
 
-### CHFs (Commone Helper Functions):
+### CHFs (Common Helper Functions):
 
 # Returns numeric values to be used within conditional checks, e.g.:
 #   $ if cmn_check_dir_exists /some/dir; then do_stuff(); fi
