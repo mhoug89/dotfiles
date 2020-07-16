@@ -27,10 +27,13 @@ export HISTCONTROL=ignorespace  # Ignore just whitespace.
 # Append to the history file, don't overwrite it.
 shopt -s histappend
 
-
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
+# Allow bash to expand paths from variables for tab completion, e.g.
+# `vim $HOME/some_dir/<TAB>` -> `vim /home/UserBob/some_dir/`.
+shopt -s direxpand
 
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"

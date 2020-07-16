@@ -72,6 +72,9 @@ set smartcase
 set autoindent      " Keep indentation level when starting next line
 set colorcolumn=80  " Hightlight column 80 by default
 au BufNewFile,BufRead *.java setlocal colorcolumn=100  " Set at 100 for Java files
+" Turn off automatic newline-at-end-of-file insertion for .creq and .sts files.
+au BufNewFile,BufRead *.creq setlocal nofixendofline
+au BufNewFile,BufRead *.sts setlocal nofixendofline
 " Make tabs equivalent to X num of spaces -- HARD TAB MUST BE ELIMINATED! :P
 set expandtab       " Expand tabs to spaces
 set shiftround      " Insert only enough spaces to get to the current
