@@ -19,7 +19,13 @@ if ! [[ $RESP =~ ^$|^[Yy] ]] ; then
   exit
 fi
 
-echo " * Copying configuration files... "
+echo " * Updating git submodules..."
+
+# Make sure git submodules have been initialized and updated. Do this in a
+# subshell to avoid altering our working directory via the `cd` command.
+( cd $SETUP_DIR; git submodule update --init --recursive )
+
+echo " * Copying configuration files..."
 
 shopt -s dotglob  # Make sure globbing includes hidden files.
 for item in "$SETUP_DIR"/*; do
@@ -41,4 +47,7 @@ shopt -u dotglob
 #echo " * Sourcing .profile... "
 #source "$HOME/.profile"
 
-echo "Setup complete!"
+echo "* Running vim commands to install plugins and their dependencies..."
+vim +PluginInstall +GoInstallBinaries +qall
+
+echo "* Setup complete!"
