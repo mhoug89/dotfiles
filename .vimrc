@@ -1,5 +1,19 @@
 " *****************************************************************************
-" KEEP VUNDLE SECTION AT THE TOP.
+" autocmd expressions:
+"
+" Automatic run of 'source' on .vimrc after editing
+autocmd! bufwritepost .vimrc source %
+
+" Get rid of trailing whitespace at end of lines
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+au InsertLeave * match ExtraWhitespace /\s\+$/
+
+" For Python files, turn off smartindent
+au! FileType python setl nosmartindent
+" *****************************************************************************
+
+" *****************************************************************************
+" KEEP VUNDLE SECTION AT THE TOP, BELOW AUTOCMD EXPRESSIONS.
 " Vundle configuration:
 "
 set nocompatible              " be iMproved, required
@@ -19,8 +33,6 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 " Plugin for Go
 Plugin 'fatih/vim-go'
-" Plugin for tmux
-Plugin 'tmux-plugins/tpm'
 " Plugin for autocompletion
 Plugin 'valloric/youcompleteme'
 " Plugin for fancy vim statusline
@@ -175,21 +187,6 @@ set showcmd         " Show the command you're currently typing on the bar
 set showtabline=3   " Show tabs at the top, even if only one is open
 
 runtime macros/matchit.vim
-" *****************************************************************************
-
-
-" *****************************************************************************
-" autocmd expressions:
-"
-" For Python files, turn off smartindent
-autocmd! FileType python setl nosmartindent
-
-" Automatic run of 'source' on .vimrc after editing
-autocmd! bufwritepost .vimrc source %
-
-" Get rid of trailing whitespace at end of lines
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 " *****************************************************************************
 
 
