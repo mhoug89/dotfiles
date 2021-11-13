@@ -19,6 +19,7 @@ if ! [[ $RESP =~ ^$|^[Yy] ]] ; then
   exit
 fi
 
+echo
 echo " * Copying configuration files..."
 
 shopt -s dotglob  # Make sure globbing includes hidden files.
@@ -41,6 +42,7 @@ shopt -u dotglob
 #echo " * Sourcing .profile... "
 #source "$HOME/.profile"
 
+echo
 echo " * Cloning (or replacing) git dependencies..."
 
 rm -rf ~/.vim/bundle/Vundle.vim
@@ -53,8 +55,10 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 # subshell to avoid altering our working directory via the `cd` command.
 ( cd $SETUP_DIR; git submodule update --init --recursive )
 
-
+echo
 echo "* Running vim commands to install plugins and their dependencies..."
+sudo apt install build-essential clang cmake vim-nox python3-dev mono-complete golang nodejs default-jdk npm python-is-python3
 vim +PluginInstall +GoInstallBinaries +qall
+( cd ~/.vim/bundle/youcompleteme && python3 install.py --all )
 
 echo "* Setup complete!"
