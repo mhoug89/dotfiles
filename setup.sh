@@ -19,12 +19,6 @@ if ! [[ $RESP =~ ^$|^[Yy] ]] ; then
   exit
 fi
 
-echo " * Updating git submodules..."
-
-# Make sure git submodules have been initialized and updated. Do this in a
-# subshell to avoid altering our working directory via the `cd` command.
-( cd $SETUP_DIR; git submodule update --init --recursive )
-
 echo " * Copying configuration files..."
 
 shopt -s dotglob  # Make sure globbing includes hidden files.
@@ -46,6 +40,19 @@ shopt -u dotglob
 # Running in subshell -- cannot apply to parent shell.
 #echo " * Sourcing .profile... "
 #source "$HOME/.profile"
+
+echo " * Cloning (or replacing) git dependencies..."
+
+rm -rf ~/.vim/bundle/Vundle.vim
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+rm -rf ~/.tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+# Make sure git submodules have been initialized and updated. Do this in a
+# subshell to avoid altering our working directory via the `cd` command.
+( cd $SETUP_DIR; git submodule update --init --recursive )
+
 
 echo "* Running vim commands to install plugins and their dependencies..."
 vim +PluginInstall +GoInstallBinaries +qall
