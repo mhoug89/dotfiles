@@ -51,11 +51,23 @@ filetype plugin indent on    " required
 "
 " Run Pathogen plugin
 execute pathogen#infect()
-" For DelimitMate plugin
-let delimitMate_expand_cr = 1
-" YouCompleteMe debugging options
-let g:ycm_server_keep_logfiles = 1
+
+" YouCompleteMe options
+"
+" Make the tab menu actually go away when you hit these keys (CR is not in the
+" list by default, for some reason...)
+let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
+"
+" If 0, don't bring up the autocomplete window unless you hit <C-Space>
+let g:ycm_auto_trigger = 1
+" If ycm_auto_trigger is turned off, you can still bring up the autocomplete
+" menu with <C-space>
+let g:ycm_key_invoke_completion = '<C-Space>'
+"
+" Debugging options:
+"let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
+
 " For Syntastic plugin
 "  Option 1: Disable on write; requires you to explicitly check the style.
 "    Good for when checking takes multiple seconds (for large files), which
