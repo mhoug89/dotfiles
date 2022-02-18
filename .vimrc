@@ -1,19 +1,5 @@
 " *****************************************************************************
-" autocmd expressions:
-"
-" Automatic run of 'source' on .vimrc after editing
-autocmd! bufwritepost .vimrc source %
-
-" Get rid of trailing whitespace at end of lines
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-au InsertLeave * match ExtraWhitespace /\s\+$/
-
-" For Python files, turn off smartindent
-au! FileType python setl nosmartindent
-" *****************************************************************************
-
-" *****************************************************************************
-" KEEP VUNDLE SECTION AT THE TOP, BELOW AUTOCMD EXPRESSIONS.
+" KEEP VUNDLE SECTION AT THE TOP.
 " Vundle configuration:
 "
 set nocompatible              " be iMproved, required
@@ -45,6 +31,63 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 " *****************************************************************************
 
+" *****************************************************************************
+" autocmd expressions:
+"
+" Automatic run of 'source' on .vimrc after editing
+augroup vimrc
+  au!
+  au bufwritepost .vimrc source %
+augroup end
+
+augroup general
+  au!
+  " Get rid of trailing whitespace at end of lines
+  au ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+  au InsertLeave * match ExtraWhitespace /\s\+$/
+augroup end
+
+augroup filetypeMisc
+  " When editing files that represent HTTP Requests, we don't want to append
+  " a newline to the body portion of the request and mess up any hashing we
+  " might be doing based on the body:
+  " Turn off automatic newline-at-end-of-file insertion for .creq and .sts files.
+  au BufNewFile,BufRead *.creq setl nofixendofline
+  au BufNewFile,BufRead *.sts setl nofixendofline
+augroup end
+
+augroup filetypeGo
+  au!
+  " Use max line length of 100
+  au FileType go setl colorcolumn=100 textwidth=100
+  " Do not expand tabs to spaces; tabs show up as 4 characters wide:
+  au FileType go setl noexpandtab tabstop=4
+augroup end
+
+augroup filetypeJava
+  au!
+  au Filetype java setl colorcolumn=100
+augroup end
+
+augroup filetypePython
+  au!
+  " Expand tabs to X num of spaces
+  au FileType python setl expandtab
+  " For Python files, turn off smartindent
+  au FileType python setl nosmartindent
+  " If expandtab is on, this is how many spaces a tab is
+  au FileType python setl softtabstop=2
+  " number of spaces inserted for indentation
+  au FileType python setl shiftwidth=2
+  " Tab spacing of 2 for real tabs
+  au FileType python setl tabstop=2
+augroup end
+
+augroup filetypeShell
+  au!
+  au BufRead,BufNewFile .bash*,.*_rc setl filetype=sh
+augroup end
+" *****************************************************************************
 
 " *****************************************************************************
 " Plugin-specific commands
@@ -114,7 +157,6 @@ filetype on
 filetype plugin on
 syntax enable
 
-au BufNewFile,BufRead .bash* setl ft=sh
 " *****************************************************************************
 
 
@@ -152,10 +194,6 @@ set bs=2            " Backspace over everything in insert mode
 " Allow for copy/paste into and out of external clipboard (use with browser, etc.)
 set clipboard=unnamed
 set colorcolumn=80  " Hightlight column 80 by default
-au BufNewFile,BufRead *.java setlocal colorcolumn=100  " Set at 100 for Java files
-" Turn off automatic newline-at-end-of-file insertion for .creq and .sts files.
-au BufNewFile,BufRead *.creq setlocal nofixendofline
-au BufNewFile,BufRead *.sts setlocal nofixendofline
 set expandtab       " Expand tabs to X num of spaces
 set mouse=a         " Enable mouse
 set shiftround      " Insert only enough spaces to get to the current
