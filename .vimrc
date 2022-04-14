@@ -58,7 +58,7 @@ augroup end
 
 augroup filetypeGo
   au!
-  " Use max line length of 100
+  " Set colorcolumn to match max line length
   au FileType go setl colorcolumn=80 textwidth=80
   " Do not expand tabs to spaces; tabs show up as 4 characters wide:
   au FileType go setl noexpandtab tabstop=4
