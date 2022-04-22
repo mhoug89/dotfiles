@@ -1,4 +1,15 @@
 " *****************************************************************************
+" If found, we don't load our other vimrc files until the end of this file.
+" However, some other logic in this file requires knowing whether the extra
+" vimrc will be loaded, so we do these checks up-front.
+let vimrc_extra_present = 0
+let vimrc_extra=expand("~/.vimrc-confidential")
+if filereadable(vimrc_extra)
+  let vimrc_extra_present = 1
+endif
+" *****************************************************************************
+
+" *****************************************************************************
 " KEEP VUNDLE SECTION AT THE TOP.
 " Vundle configuration:
 "
@@ -14,17 +25,22 @@ call vundle#begin()
 
 " Let Vundle manage Vundle; required
 Plugin 'VundleVim/Vundle.vim'
-
 " This format (no scheme or host) assumes the plug is on GitHub:
 Plugin 'tpope/vim-fugitive'
 " Plugin for Go
 Plugin 'fatih/vim-go'
-" Plugin for autocompletion
-Plugin 'valloric/youcompleteme'
 " Plugin for fancy vim statusline
 Plugin 'vim-airline/vim-airline'
 " Plugin for syntax checking
 Plugin 'vim-syntastic/syntastic'
+
+" Conditional loads:
+"
+" Plugin for autocompletion. If our *extra* vimrc is present, we probably load
+" YCM elsewhere; we want to avoid loading it twice.
+if vimrc_extra_present == 0
+  Plugin 'valloric/youcompleteme'
+endif
 
 call vundle#end()            " required
 " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -91,9 +107,6 @@ augroup end
 
 " *****************************************************************************
 " Plugin-specific commands
-"
-" Run Pathogen plugin
-execute pathogen#infect()
 
 " YouCompleteMe options
 "
@@ -328,12 +341,11 @@ function! PadWithAsterisks()
 endf
 " *****************************************************************************
 
-
 " *****************************************************************************
 " Optional confidential stuff; load if "$HOME/.vimrc-confidential" is found.
 "
-let vimrc_extra=expand("~/.vimrc-confidential")
-if filereadable(vimrc_extra)
-  execute "source" . vimrc_extra
+if vimrc_extra_present == 1
+  execute 'source' vimrc_extra
 endif
 " *****************************************************************************
+
