@@ -6,7 +6,14 @@ let vimrc_extra_present = 0
 let vimrc_extra=expand("~/.vimrc-confidential")
 if filereadable(vimrc_extra)
   let vimrc_extra_present = 1
+
+  let vimrc_extra_preload=expand("~/.vimrc-confidential-preload")
+  if filereadable(vimrc_extra_preload)
+    " Defines functions used in conditional plugin loading below.
+    execute 'source' vimrc_extra_preload
+  endif
 endif
+
 " *****************************************************************************
 
 " *****************************************************************************
@@ -38,7 +45,7 @@ Plugin 'vim-syntastic/syntastic'
 "
 " Plugin for autocompletion. If our *extra* vimrc is present, we probably load
 " YCM elsewhere; we want to avoid loading it twice.
-if vimrc_extra_present == 0
+if !(exists('*ShouldLoadOtherYcm') && ShouldLoadOtherYcm() == 1)
   Plugin 'valloric/youcompleteme'
 endif
 
