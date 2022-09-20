@@ -83,14 +83,11 @@ chf_replace_in_files() {
   done
 }
 
-parse_git_branch() {
-  git branch 2> /dev/null | \
-    sed -e '/^[^*]/d' -e 's/[*] \(.*\)/\1/' 2> /dev/null
-}
-
 # For use with PS1 variable, echoes "(my-branch) "
 parse_and_truncate_git_branch() {
-  local branch_str="$(parse_git_branch)"
+  # Note: We could use the __git_ps1 function (if available) if we wanted the
+  # full branch name displayed.
+  local branch_str="$(git branch --show-current 2> /dev/null)"
   if [[ -z "$branch_str" ]]; then
     return
   fi
