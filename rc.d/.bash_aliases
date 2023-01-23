@@ -13,8 +13,8 @@ if [ -d "/cygdrive/c/Users/$USER/Desktop" ] ; then
 fi
 
 # These are about the only `date` formats I use.
-alias date_day='date +%Y%m%d'
-alias date_sec='date +%Y%m%d%H%M%S'
+alias date_day='date +%Y-%m-%d'
+alias date_sec='date +%Y%-m-%d-%H-%M-%S'
 
 # ls variants.
 # Enable color support of ls and also add handy aliases.
