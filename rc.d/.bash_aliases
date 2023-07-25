@@ -13,8 +13,8 @@ if [ -d "/cygdrive/c/Users/$USER/Desktop" ] ; then
 fi
 
 # These are about the only `date` formats I use.
-alias date_day='date +%Y-%m-%d'
-alias date_sec='date +%Y%-m-%d-%H-%M-%S'
+alias date_day='TZ=":America/Los_Angeles" date +%Y-%m-%d'
+alias date_sec='TZ=":America/Los_Angeles" datedate +%Y%-m-%d-%H-%M-%S'
 
 # ls variants.
 # Enable color support of ls and also add handy aliases.
@@ -31,6 +31,10 @@ alias lla='ls -lAh'
 alias ls_recent_mod='ls -lt'
 alias ls_recent_create="stat -c '%W %n' * | sort -k1n"
 #alias du='echo "du aliased to:  du -kch --max-depth=1 | sort -n"; du -kch --max-depth=1 | sort -n'
+
+if type pygmentize >/dev/null 2>&1 ; then
+  alias pygcat='pygmentize -g -O style=github-dark'
+fi
 
 # Parse seconds, milliseconds, and microseconds into readable dates.
 if [ -n "$(which parse_xsec)" ]; then
