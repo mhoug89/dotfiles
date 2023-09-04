@@ -14,7 +14,7 @@ fi
 
 # These are about the only `date` formats I use.
 alias date_day='TZ=":America/Los_Angeles" date +%Y-%m-%d'
-alias date_sec='TZ=":America/Los_Angeles" datedate +%Y%-m-%d-%H-%M-%S'
+alias date_sec='TZ=":America/Los_Angeles" date +%Y%-m-%d-%H-%M-%S'
 
 # ls variants.
 # Enable color support of ls and also add handy aliases.
