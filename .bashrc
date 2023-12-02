@@ -30,6 +30,12 @@ path_prepend() {
   done
 }
 
+source_file_if_exists() {
+  if [ -f "$1" ]; then
+    source "$1"
+  fi
+}
+
 # If not running interactively, don't do anything.
 [ -z "$PS1" ] && return
 
@@ -147,11 +153,11 @@ wrapped_func_to_not_change_counter() {
   local i
   for (( i=0; i<${arr_len}; i++ )); do
     if [ -f "${files_to_source[$i]}" ]; then
-      . "${files_to_source[$i]}"
+      source_file_if_exists "${files_to_source[$i]}"
     elif [ -d "${files_to_source[$i]}" ]; then
       shopt -s dotglob
       for script in "${files_to_source[$i]}"/* ; do
-        . "$script"
+        source_file_if_exists "$script"
       done
       shopt -u dotglob
     elif (( $PRINT_WARNINGS )); then

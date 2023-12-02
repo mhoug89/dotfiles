@@ -9,14 +9,14 @@ venv_wrapper_sh=""
 if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
   venv_wrapper_sh="/usr/local/bin/virtualenvwrapper.sh"
 # May have also been installed locally, via `pip install --user ...`
-elif [ -f "$HOME/.local/bin/virtualenvwrapper.sh" ]; then
-  venv_wrapper_sh="$HOME/.local/bin/virtualenvwrapper.sh"
+elif [ -f "${HOME}/.local/bin/virtualenvwrapper.sh" ]; then
+  venv_wrapper_sh="${HOME}/.local/bin/virtualenvwrapper.sh"
 fi
 if [ -n "$venv_wrapper_sh" ]; then
-  export WORKON_HOME="$HOME/.virtualenvs"
-  if [ ! -d "$HOME/venv_projects" ]; then
-    mkdir "$HOME/venv_projects"
+  export WORKON_HOME="${HOME}/.virtualenvs"
+  if [ ! -d "${HOME}/venv_projects" ]; then
+    mkdir "${HOME}/venv_projects"
   fi
-  export PROJECT_HOME="$HOME/venv_projects"
-  source "$venv_wrapper_sh"
+  export PROJECT_HOME="${HOME}/venv_projects"
+  source "${venv_wrapper_sh}"
 fi
