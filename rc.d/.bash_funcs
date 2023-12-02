@@ -5,11 +5,13 @@ cat_md() {
 }
 
 ### CHFs (Common Helper Functions):
+# Most of these were taken from:
+# https://github.com/martinburger/bash-common-helpers
 
 # Returns numeric values to be used within conditional checks, e.g.:
 #   $ if cmn_check_dir_exists /some/dir; then do_stuff(); fi
 #   $ if ! cmn_check_dir_exists /some/garbage/path; then do_stuff(); fi
-chf_check_dir_exists() {
+chf__check_dir_exists() {
   local fpath="${1}"
   [[ -d "${fpath}" ]]
   return $?
@@ -18,25 +20,25 @@ chf_check_dir_exists() {
 # Returns numeric values to be used within conditional checks, e.g.:
 #   $ if cmn_check_file_exists /some/file; then do_stuff(); fi
 #   $ if ! cmn_check_file_exists /some/garbage/path; then do_stuff(); fi
-chf_check_file_exists() {
+chf__check_file_exists() {
   local fpath="${1}"
   [[ -f "${fpath}" ]]
   return $?
 }
 
-chf_echo_green() {
+chf__echo_green() {
   local green=$(tput setaf 2)
   local reset=$(tput sgr0)
   echo -e "${green}$@${reset}"
 }
 
-chf_echo_red() {
+chf__echo_red() {
   local red=$(tput setaf 1)
   local reset=$(tput sgr0)
   echo -e "${red}$@${reset}"
 }
 
-chf_echo_yellow() {
+chf__echo_yellow() {
   local yellow=$(tput setaf 3)
   local reset=$(tput sgr0)
   echo -e "${yellow}$@${reset}"
@@ -62,8 +64,8 @@ chf_echo_yellow() {
 # not just the first one.
 #
 # Example:
-#   $ chf_replace_in_files placeholder replacement file1.txt file2.txt
-chf_replace_in_files() {
+#   $ chf__replace_in_files placeholder replacement file1.txt file2.txt
+chf__replace_in_files() {
   local search=${1}
   local replace=${2}
   local files=${@:3}
@@ -73,13 +75,53 @@ chf_replace_in_files() {
       if ( grep --fixed-strings --quiet "${search}" "${curfile}" ); then
         perl -pi -e "s/\Q${search}/${replace}/g" "${curfile}"
       else
-        chf_echo_yellow "Could not find search string '${search}' (thus," \
+        chf__echo_yellow "Could not find search string '${search}' (thus," \
                         "cannot replace with '${replace}') in file: ${curfile}"
       fi
     else
-        chf_echo_yellow "File '${curfile}' does not exist (thus, cannot" \
+        chf__echo_yellow "File '${curfile}' does not exist (thus, cannot" \
                         "replace '${search}' with '${replace}')."
     fi
+  done
+}
+
+# Prints info about available clusters, plus namespaces in current cluster.
+mlh__kube_grok() {
+  DIVIDER="---------------------------------"
+  echo "${DIVIDER}"
+  echo ">>> Info about all clusters:"
+
+  ( set -x; kind get clusters )
+  echo
+
+  ( set -x; kubectl config get-clusters )
+  echo
+
+  ( set -x; kubectl config get-contexts )
+  echo
+
+  ( set -x; kubectl config get-users )
+  echo
+
+  echo "${DIVIDER}"
+  echo ">>> Info about current cluster (as determined by current context):"
+  echo
+
+  ( set -x; kubectl get namespaces )
+  echo
+
+  ( set -x; kubectl --namespace default get all )
+  echo
+}
+
+# Prints all resources (as detected by "all") under each namespace in current
+# cluster.
+mlh_kube_get_resources() {
+  DIVIDER="---------------------------------"
+  for kube_ns in $(kubectl get namespaces --no-headers -o custom-columns=":metadata.name"); do
+    echo "${DIVIDER}"
+    ( set -x; kubectl --namespace "${kube_ns:?}" get all )
+    echo
   done
 }
 

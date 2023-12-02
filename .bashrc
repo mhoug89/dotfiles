@@ -5,12 +5,29 @@
 # For letting me know when a file doesn't exist, etc.
 PRINT_WARNINGS=0
 
-# Arg to this function should be an ABSOLUTE path to the desired dir.
-append_dir_to_path_if_not_in_path() {
-  # Also check if it's a valid directory first.
-  if [ -d "$1" ]; then
-    [[ ":$PATH:" != *":$1:"* ]] && PATH="${PATH}:$1"
-  fi
+# Args to this function should each be an ABSOLUTE path to the desired dir.
+# Taken from https://superuser.com/a/753948
+path_append() {
+  for ARG in "$@"
+  do
+    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+        PATH="${PATH:+"$PATH:"}$ARG"
+    fi
+  done
+}
+
+# Args to this function should each be an ABSOLUTE path to the desired dir. For
+# convenience, args are prepended in reverse order, e.g. `path_prepend P1 P2 P3`
+# would result in a PATH of "P1:P2:P3:${PATH}".
+# Taken from https://superuser.com/a/753948
+path_prepend() {
+  for ((i=$#; i>0; i--));
+  do
+    ARG=${!i}
+    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+        PATH="$ARG${PATH:+":$PATH"}"
+    fi
+  done
 }
 
 # If not running interactively, don't do anything.
@@ -110,7 +127,7 @@ wrapped_func_to_not_change_counter() {
   arr_len=${#dirs_to_add_to_path[@]}
   local i
   for (( i=0; i<${arr_len}; i++ )); do
-    append_dir_to_path_if_not_in_path "${dirs_to_add_to_path[$i]}"
+    path_append "${dirs_to_add_to_path[$i]}"
   done
 }
 wrapped_func_to_not_change_counter

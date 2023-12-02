@@ -35,7 +35,7 @@ Plugin 'VundleVim/Vundle.vim'
 " This format (no scheme or host) assumes the plug is on GitHub:
 Plugin 'tpope/vim-fugitive'
 " Plugin for Go
-Plugin 'fatih/vim-go'
+""" Plugin 'fatih/vim-go'
 " Plugin for fancy vim statusline
 Plugin 'vim-airline/vim-airline'
 " Plugin for syntax checking
@@ -82,7 +82,7 @@ augroup end
 augroup filetypeGo
   au!
   " Set colorcolumn to match max line length
-  au FileType go setl colorcolumn=80 textwidth=80
+  au FileType go setl colorcolumn=80,120 textwidth=80
   " Do not expand tabs to spaces; tabs show up as 4 characters wide:
   au FileType go setl noexpandtab tabstop=4
 augroup end
