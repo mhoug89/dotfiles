@@ -44,7 +44,7 @@ chf__echo_yellow() {
   echo -e "${yellow}$@${reset}"
 }
 
-# Replaces given string 'search' with 'replace' in given files.
+# Replaces given string 'placeholder' with 'replace' in given files.
 #
 # Important: The replacement is done in-place. Thus, it overwrites the given
 # files, and no backup files are created.
@@ -66,8 +66,10 @@ chf__echo_yellow() {
 # Example:
 #   $ chf__replace_in_files placeholder replacement file1.txt file2.txt
 chf__replace_in_files() {
-  local search=${1}
-  local replace=${2}
+  # Don't allow search placeholder to be empty or unset
+  local search="${1:?}"
+  # Allow replacement to be empty, but not unset
+  local replace="${2:+}"
   local files=${@:3}
 
   for curfile in ${files[@]}; do
@@ -116,7 +118,7 @@ mlh__kube_grok() {
 
 # Prints all resources (as detected by "all") under each namespace in current
 # cluster.
-mlh_kube_get_resources() {
+mlh__kube_get_resources() {
   DIVIDER="---------------------------------"
   for kube_ns in $(kubectl get namespaces --no-headers -o custom-columns=":metadata.name"); do
     echo "${DIVIDER}"
@@ -139,6 +141,31 @@ parse_and_truncate_git_branch() {
   fi
   # Echo with a trailing space.
   echo "($branch_str) "
+}
+
+# Parse seconds, milliseconds, and microseconds timestamps into readable dates.
+parse_xsec() {
+  local base=${1:?}
+  shift
+
+  while [ $# -gt 0 ]
+  do
+    secs=$(echo "scale=6; ${1}/${base}" | bc)
+    date -d @$secs +"%F %T.%N %z"
+    shift
+  done
+}
+
+parse_msec() {
+  parse_xsec 1000 "${1:?}"
+}
+
+parse_sec() {
+  parse_xsec 1 "${1:?}"
+}
+
+parse_usec() {
+  parse_xsec 1000000 "${1:?}"
 }
 
 rdp_with_flags() {
