@@ -149,13 +149,16 @@ wrapped_func_to_not_change_counter() {
 wrapped_func_to_not_change_counter
 
 wrapped_func_to_not_change_counter() {
-  # Create an array of files that should be sourced.
-  # Can also add directories such that every file in the directory is sourced.
+  # Create an array of files/dirs that should be sourced. If they don't exist,
+  # they'll be skipped.
+  #
+  # You can also add directories such that every file in the directory is
+  # sourced. Note that this does not work recursively; only one directory level
+  # is walked.
   local files_to_source=(
     "/etc/bash_completion"
-    "$HOME/.bashrc_local"
-    "$HOME/rc.d"
-    # Should source all files in rc.work.d, as well as other necessary stuff.
+    "${HOME}/.bashrc.d"
+    "${HOME}/.bashrc_local"
     "${HOME}/.bashrc_work"
   )
   local arr_len=${#files_to_source[@]}
@@ -163,14 +166,12 @@ wrapped_func_to_not_change_counter() {
   local i
   for (( i=0; i<${arr_len}; i++ )); do
     if [ -f "${files_to_source[$i]}" ]; then
-      source_file_if_exists "${files_to_source[$i]}"
+      source "${files_to_source[$i]}"
     elif [ -d "${files_to_source[$i]}" ]; then
-      shopt -s dotglob
-
+      shopt -s dotglob  # Make glob return hidden files too
       for script in "${files_to_source[$i]}"/* ; do
         source_file_if_exists "$script"
       done
-
       shopt -u dotglob
     elif (( $PRINT_WARNINGS )); then
       # Alert me when a file doesn't exist.
