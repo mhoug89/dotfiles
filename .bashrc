@@ -5,6 +5,13 @@
 # For letting me know when a file doesn't exist, etc.
 PRINT_WARNINGS=0
 
+############################################################################
+# FUNCTIONS ################################################################
+#
+# These functions are defined here, rather than in the file specifically for
+# functions, because they are used by other setup steps/scripts and need to be
+# declared before those run.
+
 # Args to this function should each be an ABSOLUTE path to the desired dir.
 # Taken from https://superuser.com/a/753948
 path_append() {
@@ -35,6 +42,9 @@ source_file_if_exists() {
     source "$1"
   fi
 }
+
+# END FUNCTIONS ############################################################
+############################################################################
 
 # If not running interactively, don't do anything.
 [ -z "$PS1" ] && return
@@ -141,14 +151,14 @@ wrapped_func_to_not_change_counter
 wrapped_func_to_not_change_counter() {
   # Create an array of files that should be sourced.
   # Can also add directories such that every file in the directory is sourced.
-  files_to_source=(
+  local files_to_source=(
     "/etc/bash_completion"
     "$HOME/.bashrc_local"
     "$HOME/rc.d"
     # Should source all files in rc.work.d, as well as other necessary stuff.
     "${HOME}/.bashrc_work"
   )
-  arr_len=${#files_to_source[@]}
+  local arr_len=${#files_to_source[@]}
 
   local i
   for (( i=0; i<${arr_len}; i++ )); do
@@ -156,9 +166,11 @@ wrapped_func_to_not_change_counter() {
       source_file_if_exists "${files_to_source[$i]}"
     elif [ -d "${files_to_source[$i]}" ]; then
       shopt -s dotglob
+
       for script in "${files_to_source[$i]}"/* ; do
         source_file_if_exists "$script"
       done
+
       shopt -u dotglob
     elif (( $PRINT_WARNINGS )); then
       # Alert me when a file doesn't exist.
