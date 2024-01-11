@@ -133,8 +133,8 @@ case "$TERM" in
 esac
 
 # Add various local bin directories to PATH.
-# Counter-based for loop (this method accounts for spaces in file names)
-wrapped_func_to_not_change_counter() {
+# Counter-based for loop (this method accounts for spaces in file names).
+_add_dirs_to_path() {
   dirs_to_add_to_path=(
     "$HOME/bin"
     # Some tools install things here, e.g. `pip install --user <package>`.
@@ -146,9 +146,16 @@ wrapped_func_to_not_change_counter() {
     path_append "${dirs_to_add_to_path[$i]}"
   done
 }
-wrapped_func_to_not_change_counter
+_add_dirs_to_path
+unset -f _add_dirs_to_path
 
-wrapped_func_to_not_change_counter() {
+# We do this in a function in order to not use global counter variables. As an
+# example: if both your .bashrc and .bashrc_local were to use this same block of
+# code without being nested in a function, and your counter variable were
+# global, the source'd script would share the same counter variable, leading to
+# possibilities like skipping files that should be sourced, or even worse,
+# hitting an infinite loop that might cause your shell to never load.
+_source_rc_files() {
   # Create an array of files/dirs that should be sourced. If they don't exist,
   # they'll be skipped.
   #
@@ -180,4 +187,5 @@ wrapped_func_to_not_change_counter() {
     fi
   done
 }
-wrapped_func_to_not_change_counter
+_source_rc_files
+unset -f _source_rc_files
