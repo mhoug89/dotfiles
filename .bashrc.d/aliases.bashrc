@@ -7,7 +7,7 @@ alias cgrep='\grep ${LS_COLOR_FLAG} -C 2'
 
 # These are about the only `date` formats I use.
 alias date_day='TZ=":America/Los_Angeles" date +%Y-%m-%d'
-alias date_sec='TZ=":America/Los_Angeles" date +%Y%-m-%d-%H-%M-%S'
+alias date_sec='TZ=":America/Los_Angeles" date +%Y-%m-%d-%H-%M-%S'
 
 alias du_custom='du -kch --max-depth=1 | sort -n'
 
