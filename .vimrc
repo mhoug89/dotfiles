@@ -82,9 +82,13 @@ augroup end
 augroup filetypeGo
   au!
   " Set colorcolumn to match max line length
-  au FileType go setl colorcolumn=80,120 textwidth=80
+  " For 80-column wrap:
+  "au FileType go setl colorcolumn=80,120 textwidth=80
+  " For 100-column wrap:
+  au FileType go setl colorcolumn=100,120 textwidth=100
+
   " Do not expand tabs to spaces; tabs show up as 4 characters wide:
-  au FileType go setl noexpandtab tabstop=4
+  au FileType go setl noexpandtab shiftwidth=4 tabstop=4
 augroup end
 
 augroup filetypeJava
@@ -277,6 +281,15 @@ inoremap <silent> <Down> <Esc>gja
 " Make ctrl + s behave as save, GUI-style
 "map <C-S> :w<CR>
 "imap <C-S> <ESC>:w<CR>
+
+" Make <ctrl+backspace> and <ctrl+w> delete backward 1 word.
+""" NOTE: <C-H> or <C-BS> is backspace, depending on the terminal/env/etc.
+inoremap <C-BS> <C-\><C-o>dB
+inoremap <C-H> <C-\><C-o>dB
+inoremap <C-w> <C-\><C-o>dB
+nnoremap <C-BS> dB
+nnoremap <C-H> dB
+nnoremap <C-w> dB
 
 " Make keys below behave correctly when a pop-up menu is visible
 inoremap <expr><silent> <S-Tab> pumvisible() ? "\<C-y>" : "<C-R>=Savecursor()<CR><C-X><C-O><C-P><Down><C-R>=Restorecursor()<CR>"
