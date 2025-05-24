@@ -28,8 +28,8 @@ path_append() {
 # would result in a PATH of "P1:P2:P3:${PATH}".
 # Taken from https://superuser.com/a/753948
 path_prepend() {
-  for ((i=$#; i>0; i--));
-  do
+  local i
+  for ((i=$#; i>0; i--)); do
     ARG=${!i}
     if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
         PATH="$ARG${PATH:+":$PATH"}"
@@ -40,6 +40,15 @@ path_prepend() {
 source_file_if_exists() {
   if [ -f "$1" ]; then
     source "$1"
+  fi
+}
+
+source_file_if_exists_and_not_swp() {
+  # Sometimes I'm editing my bashrc files and background my editor before
+  # testing them, leaving a vim swap file in their directory. I never want to
+  # accidentally source these.
+  if [[ ! "$1" =~ \.swp$ ]]; then
+    source_file_if_exists "$1"
   fi
 }
 
@@ -177,7 +186,7 @@ _source_rc_files() {
     elif [ -d "${files_to_source[$i]}" ]; then
       shopt -s dotglob  # Make glob return hidden files too
       for script in "${files_to_source[$i]}"/* ; do
-        source_file_if_exists "$script"
+        source_file_if_exists_and_not_swp "$script"
       done
       shopt -u dotglob
     elif (( $PRINT_WARNINGS )); then
