@@ -15,8 +15,7 @@ PRINT_WARNINGS=0
 # Args to this function should each be an ABSOLUTE path to the desired dir.
 # Taken from https://superuser.com/a/753948
 path_append() {
-  for ARG in "$@"
-  do
+  for ARG in "$@"; do
     if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
         PATH="${PATH:+"$PATH:"}$ARG"
     fi
@@ -40,15 +39,6 @@ path_prepend() {
 source_file_if_exists() {
   if [ -f "$1" ]; then
     source "$1"
-  fi
-}
-
-source_file_if_exists_and_not_swp() {
-  # Sometimes I'm editing my bashrc files and background my editor before
-  # testing them, leaving a vim swap file in their directory. I never want to
-  # accidentally source these.
-  if [[ ! "$1" =~ \.swp$ ]]; then
-    source_file_if_exists "$1"
   fi
 }
 
@@ -158,35 +148,28 @@ _add_dirs_to_path() {
 _add_dirs_to_path
 unset -f _add_dirs_to_path
 
-# We do this in a function in order to not use global counter variables. As an
-# example: if both your .bashrc and .bashrc_local were to use this same block of
-# code without being nested in a function, and your counter variable were
-# global, the source'd script would share the same counter variable, leading to
-# possibilities like skipping files that should be sourced, or even worse,
-# hitting an infinite loop that might cause your shell to never load.
 _source_rc_files() {
   # Create an array of files/dirs that should be sourced. If they don't exist,
-  # they'll be skipped.
+  # they'll be skipped. Files must end with the suffix ".bashrc" to be sourced.
   #
   # You can also add directories such that every file in the directory is
-  # sourced. Note that this does not work recursively; only one directory level
-  # is walked.
+  # sourced, but note that this is not recursive.
   local files_to_source=(
     "/etc/bash_completion"
     "${HOME}/.bashrc.d"
+    "${HOME}/.bashrc_work.d"
     "${HOME}/.bashrc_local"
-    "${HOME}/.bashrc_work"
   )
-  local arr_len=${#files_to_source[@]}
 
-  local i
-  for (( i=0; i<${arr_len}; i++ )); do
-    if [ -f "${files_to_source[$i]}" ]; then
-      source "${files_to_source[$i]}"
-    elif [ -d "${files_to_source[$i]}" ]; then
-      shopt -s dotglob  # Make glob return hidden files too
-      for script in "${files_to_source[$i]}"/* ; do
-        source_file_if_exists_and_not_swp "$script"
+  for item in "${files_to_source[@]}"; do
+    if [ -f "${item}" ]; then
+      source "${item}"
+    elif [ -d "${item}" ]; then
+      shopt -s dotglob
+      for rc_file in "${item}"/*.bashrc; do
+        if [ -f "${rc_file}" ]; then
+          source "${rc_file}"
+        fi
       done
       shopt -u dotglob
     elif (( $PRINT_WARNINGS )); then

@@ -3,11 +3,11 @@
 " However, some other logic in this file requires knowing whether the extra
 " vimrc will be loaded, so we do these checks up-front.
 let vimrc_extra_present = 0
-let vimrc_extra=expand("~/.vimrc-confidential")
+let vimrc_extra=expand("~/.vimrc-work")
 if filereadable(vimrc_extra)
   let vimrc_extra_present = 1
 
-  let vimrc_extra_preload=expand("~/.vimrc-confidential-preload")
+  let vimrc_extra_preload=expand("~/.vimrc-work-preload")
   if filereadable(vimrc_extra_preload)
     " Defines functions used in conditional plugin loading below.
     execute 'source' vimrc_extra_preload
@@ -362,7 +362,7 @@ endf
 " *****************************************************************************
 
 " *****************************************************************************
-" Optional confidential stuff; load if "$HOME/.vimrc-confidential" is found.
+" Optional work stuff; load if "$HOME/.vimrc-work" is found.
 "
 if vimrc_extra_present == 1
   execute 'source' vimrc_extra
