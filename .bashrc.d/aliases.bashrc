@@ -8,6 +8,11 @@ alias cgrep='\grep ${LS_COLOR_FLAG} -C 2'
 # These are about the only `date` formats I use.
 alias date_day='TZ=":America/Los_Angeles" date +%Y-%m-%d'
 alias date_sec='TZ=":America/Los_Angeles" date +%Y-%m-%d-%H-%M-%S'
+# I use this as shorthand for starting a new Git branch; the abbreviation
+# stands for "git new branch". I'll type gnb into my terminal, hit ctrl+alt+e
+# to expand the alias, and then type the rest of the branch name that comes
+# after the date-related prefix.
+alias gnb='git switch -c c$(date_day)-'
 
 alias du_custom='du -kch --max-depth=1 | sort -n'
 
