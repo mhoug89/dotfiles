@@ -48,6 +48,10 @@ source_file_if_exists() {
 # If not running interactively, don't do anything.
 [ -z "$PS1" ] && return
 
+# Disable XON/XOFF so ctrl+s works to search forward in command history; see:
+# https://stackoverflow.com/questions/791765/unable-to-forward-search-bash-history-similarly-as-with-ctrl-r/791800#791800
+stty -ixon
+
 # Make vim the default editor!
 export EDITOR=vim
 
