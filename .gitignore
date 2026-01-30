@@ -1,2 +1,3 @@
 .bashrc_local
 .vim/.netrwhist
+.fonts/**/.uuid
