@@ -135,6 +135,9 @@ let g:ycm_key_invoke_completion = '<C-Space>'
 "let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 
+" ALE options
+" Disable this so errors/warnings don't appear as if they're typed comments.
+let g:ale_virtualtext_cursor=0
 " *****************************************************************************
 
 
