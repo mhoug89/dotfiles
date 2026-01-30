@@ -39,14 +39,14 @@ Plugin 'tpope/vim-fugitive'
 " Plugin for fancy vim statusline
 Plugin 'vim-airline/vim-airline'
 " Plugin for syntax checking
-Plugin 'vim-syntastic/syntastic'
+Plugin 'dense-analysis/ale'
 
 " Conditional loads:
 "
 " Plugin for autocompletion. If our *extra* vimrc is present, we probably load
 " YCM elsewhere; we want to avoid loading it twice.
 if !(exists('*ShouldLoadOtherYcm') && ShouldLoadOtherYcm() == 1)
-  Plugin 'valloric/youcompleteme'
+  Plugin 'ycm-core/YouCompleteMe'
 endif
 
 call vundle#end()            " required
@@ -135,14 +135,6 @@ let g:ycm_key_invoke_completion = '<C-Space>'
 "let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 
-" For Syntastic plugin
-"  Option 1: Disable on write; requires you to explicitly check the style.
-"    Good for when checking takes multiple seconds (for large files), which
-"    can be pretty annoying.
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
-"  Option 2: Disable by default on write+quit (keeping check-on-{write,open}).
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
 " *****************************************************************************
 
 
