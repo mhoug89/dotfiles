@@ -179,7 +179,7 @@ _source_rc_files() {
     elif (( $PRINT_WARNINGS )); then
       # Alert me when a file doesn't exist.
       # BASH_SOURCE shows this script's filename.
-      echo "${BASH_SOURCE}: Supposed to source ${files_to_source[$i]}, file didn't exist."
+      echo "${BASH_SOURCE}: Supposed to source ${item}, file didn't exist."
     fi
   done
 }
